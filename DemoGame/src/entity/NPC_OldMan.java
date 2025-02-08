@@ -15,6 +15,7 @@ public class NPC_OldMan extends Entity{
 		speed = 1;
 		
 		getImage();
+		setDialogue();
 	}
 	
 	public void getImage() {
@@ -29,6 +30,14 @@ public class NPC_OldMan extends Entity{
 		right2 = setup("/npc/oldman_right_2");
 	}
 
+	public void setDialogue() {
+		
+		dialogues[0] = "HELLO";
+		dialogues[1] = "You make me talk";
+		dialogues[2] = "Good job, I know you have...\na bad path,\nbut you did a great job";
+		dialogues[3] = "Gogo";
+	}
+	
 	// Oldman's behavior
 	public void setAction() {
 		
@@ -54,6 +63,9 @@ public class NPC_OldMan extends Entity{
 			actionLockCounter = 0;
 			
 		}
-		
+	}
+	
+	public void speak() {
+		super.speak();
 	}
 }

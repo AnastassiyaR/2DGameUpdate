@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -47,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable{
 	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
 	public SuperObject obj[] = new SuperObject[10]; // we can display up to 10 objects at the same time.
+	public Entity npc[] = new Entity[10];
 	
 	// GAME STATE
 	public int gameState;
@@ -62,59 +64,22 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true); // GamePanel can be focused to receive the key input
 	}
 	
+	// GAME PROCESS
 	public void setupGame() {
-		
 		aSetter.setObject();
+		aSetter.setNPC();
 		playMusic(0);
 		gameState = playState;
 		
 	}
 	
+	// START GAME
 	public void startGameThread() {
-		
 		gameThread = new Thread(this);
 		gameThread.start();
 		
 	}
 	
-	
- 	@Override
-//	public void run() {
-//		// running tasks in a background thread
-// 		
-// 		double drawInterval = 1000000000/FPS; // 0.01666 seconds
-// 		double nextDrawTime = System.nanoTime() + drawInterval;
-//		
-//		while(gameThread != null) {
-//			
-//			// The time between update and repaint
-//			// long currentTime = System.nanoTime();
-//			// System.out.println("Time is"+currentTime);
-//			
-//			update();
-//			
-//			repaint();
-//			
-//			try {
-//				double remainingTime = nextDrawTime - System.nanoTime();
-//				remainingTime = remainingTime/1000000000;
-//				
-//				if(remainingTime < 0) {
-//					remainingTime = 0;
-//				}
-//				
-//				Thread.sleep((long) remainingTime);
-//				
-//				nextDrawTime += drawInterval;
-//				
-//				// System.out.println("GAME LOOP"); for checking
-//			
-//			} catch (InterruptedException e) {
-//			    e.printStackTrace();
-//			}
-//		}
-//				
-//	}
  	
  	public void run() {
  		
@@ -148,10 +113,19 @@ public class GamePanel extends JPanel implements Runnable{
  		}
  	}
  	
+ 	// UPDATING
  	public void update() {
  		
  		if(gameState == playState) {
+ 			// PLAYER
  			player.update();
+ 			
+ 			// NPC
+ 			for(int i = 0; i < npc.length; i++) {
+ 				if(npc[i] != null) {
+ 					npc[i].update();
+ 				}
+ 			}
  		}
  		if(gameState == pauseState) {
  			// nothing
@@ -168,10 +142,16 @@ public class GamePanel extends JPanel implements Runnable{
  		tileM.draw(g2);
  		
  		// OBJECT
- 		// We have to know what kind of objects we draw
  		for(int i = 0; i < obj.length; i++) {
  			if(obj[i] != null) {
  				obj[i].draw(g2, this);
+ 			}
+ 		}
+ 		
+ 		// NPC
+ 		for(int i = 0; i < npc.length; i++) {
+ 			if(npc[i] != null) {
+ 				npc[i].draw(g2); // not (g2, this), because Entity.java has GamePanel gp
  			}
  		}
  		
@@ -198,7 +178,6 @@ public class GamePanel extends JPanel implements Runnable{
  	public void playSE(int i) {
  		se.setFile(i);
  		se.play();
- 		// no need loop because it is short
  	}
  
 }

@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JPanel;
 
 import entity.Entity;
 import entity.Player;
-import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -47,8 +49,11 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
-	public SuperObject obj[] = new SuperObject[10]; // we can display up to 10 objects at the same time.
+	public Entity obj[] = new Entity[10]; // we can display up to 10 objects at the same time.
 	public Entity npc[] = new Entity[10];
+	public Entity monster[] = new Entity[20];
+	ArrayList<Entity> entityList = new ArrayList<>();
+
 	
 	// GAME STATE
 	public int gameState;
@@ -66,10 +71,11 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true); // GamePanel can be focused to receive the key input
 	}
 	
-	// GAME PROCESS
+	// ADDING OBJECTS
 	public void setupGame() {
 		aSetter.setObject();
 		aSetter.setNPC();
+		aSetter.setMonster();
 		gameState = titleState;
 		
 	}
@@ -118,6 +124,7 @@ public class GamePanel extends JPanel implements Runnable{
  	public void update() {
  		
  		if(gameState == playState) {
+ 			
  			// PLAYER
  			player.update();
  			
@@ -128,8 +135,14 @@ public class GamePanel extends JPanel implements Runnable{
  				}
  			}
  		}
+ 		
  		if(gameState == pauseState) {
  			// nothing
+ 		}
+ 		for(int i = 0; i < monster.length; i++) {
+ 			if(monster[i] != null) {
+ 				monster[i].update();
+ 			}
  		}
  	}
  	
@@ -143,33 +156,53 @@ public class GamePanel extends JPanel implements Runnable{
  		if(gameState == titleState) {
  			ui.draw(g2);
  		} else {
+ 			
  			// TILE
  			tileM.draw(g2);
- 	 		
- 	 		// OBJECT
- 	 		for(int i = 0; i < obj.length; i++) {
- 	 			if(obj[i] != null) {
- 	 				obj[i].draw(g2, this);
- 	 			}
- 	 		}
- 	 		
- 	 		// NPC
- 	 		for(int i = 0; i < npc.length; i++) {
- 	 			if(npc[i] != null) {
- 	 				npc[i].draw(g2); // not (g2, this), because Entity.java has GamePanel gp
- 	 			}
- 	 		}
- 	 		
- 	 		// PLAYER
- 	 		player.draw(g2);
- 	 		
+ 	 	
+ 			// ADD ENTITIES TO THE LIST
+ 			entityList.add(player);
+ 			for(int i = 0; i < npc.length; i++) {
+ 				if(npc[i] != null) {
+ 					entityList.add(npc[i]);
+ 				}
+ 			}
+ 			for(int i = 0; i < obj.length; i++) {
+ 				if(obj[i] != null) {
+ 					entityList.add(obj[i]);
+ 				}
+ 			}
+ 			for(int i = 0; i < monster.length; i++) {
+ 				if(monster[i] != null) {
+ 					entityList.add(monster[i]);
+ 				}
+ 			}
+ 			
+ 			// SORT
+ 			Collections.sort(entityList, new Comparator<Entity>() {
+ 				
+ 				@Override
+ 				public int compare(Entity o1, Entity o2) {
+ 					int result = Integer.compare(o1.worldY, o2.worldY);
+ 					return result;
+ 				}
+ 			});
+ 			
+ 			// DRAW ENTITIES
+ 			for(int i = 0; i < entityList.size(); i++) {
+ 				entityList.get(i).draw(g2);
+ 			}
+ 			// REMOVE ENTITIES
+ 			entityList.clear();
+ 			
+ 			
  	 		// UI
  	 		ui.draw(g2);
  	 		
  	 		g2.dispose();
  		}
- 		
  	}
+ 		
  	
  	public void playMusic(int i) {
  		

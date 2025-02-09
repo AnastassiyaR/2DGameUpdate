@@ -2,7 +2,7 @@ package main;
 
 import java.awt.BasicStroke;
 
-import object.SuperObject;
+import entity.Entity;
 import object.OBJ_Heart;
 
 import java.awt.Color;
@@ -46,7 +46,7 @@ public class UI {
 		
 		
 		// CREATE HUD OBJECT
-		SuperObject heart = new OBJ_Heart(gp);
+		Entity heart = new OBJ_Heart(gp);
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
@@ -90,13 +90,26 @@ public class UI {
 		}
 		
 	}	
-	
+	// HEARTS AND SENSE ABOUT P + CTRL
 	public void drawPlayerLife() {
+		
+		// TEXT
+		g2.setFont(pb);
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD,16F));
+		String text = "(CTRL + P) = PAUSE\n(COMMAND + P) = PAUSE";
+		int x = gp.tileSize/2;
+		int y = gp.tileSize*2;
+		
+		for(String a : text.split("\n")) {
+			g2.setColor(Color.WHITE);
+			g2.drawString(a, x, y);
+			y += 30;
+		}	
 		
 //		gp.player.life = 6;
 		
-		int x = gp.tileSize/2;
-		int y = gp.tileSize/2;
+		x = gp.tileSize/2;
+		y = gp.tileSize/2;
 		int i = 0;
 		
 		// DRAW ONLY BLANK HEARTS
@@ -222,11 +235,17 @@ public class UI {
 		
 	}
 	public void drawPauseScreen() {
-		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,80F));
-		String text = "PAUSED :o";
+		g2.setFont(maruMonica);
+		
+		g2.setColor(new Color(0, 0, 0, 100));
+		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD,90F));
+		String text = "PAUSED";
 		int x = getXforCenteredText(text);
 		int y = gp.screenHeight/2;
 		
+		g2.setColor(Color.white);
 		g2.drawString(text, x, y);
 		
 	}

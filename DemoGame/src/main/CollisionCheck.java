@@ -61,6 +61,8 @@ public class CollisionCheck {
 		}
 	}
 	
+	// this is responsible for calculating the position of the "hard area"
+	// (the actual location where the object collides)
 	public int checkObject(Entity entity, boolean player) {
 		// if player hits object. if yes - check collision
 		// can use any number, only it does not was in array. F.e in this case we can not use 0-10
@@ -75,57 +77,24 @@ public class CollisionCheck {
 				entity.solidArea.y = entity.worldY + entity.solidArea.y;
 				
 				// Get the object's solid area position
-				gp.obj[i].solidArea.x = gp.obj[i].worldXX + gp.obj[i].solidArea.x;
-				gp.obj[i].solidArea.y = gp.obj[i].worldYY + gp.obj[i].solidArea.y;
+				gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
+				gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
 				
 				switch(entity.direction) {
-				case "up":
-					entity.solidArea.y -= entity.speed;
-					// if these two rectangles intersect
-					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
+				case "up": entity.solidArea.y -= entity.speed; break;
+				case "down": entity.solidArea.y += entity.speed; break;
+				case "left": entity.solidArea.x -= entity.speed; break;
+				case "right": entity.solidArea.x += entity.speed; break;}
+				
+				if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
+					if(gp.obj[i].collision == true) {
+						entity.collisionOn = true;
 					}
-					break;
-				case "down":
-					entity.solidArea.y += entity.speed;
-					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
+					if(player == true) {
+						index = i;
 					}
-					break;
-				case "left":
-					entity.solidArea.x -= entity.speed;
-					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
-					}
-					break;
-				case "right":
-					entity.solidArea.x += entity.speed;
-					// We do not use intersects for tile otherwise have to check like EVERY tile on the screen
-					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
-					}
-					break;
 				}
+				
 				entity.solidArea.x = entity.solidAreaDefaultX;
 				entity.solidArea.y = entity.solidAreaDefaultY;
 				gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
@@ -160,37 +129,19 @@ public class CollisionCheck {
 				target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
 				
 				switch(entity.direction) {
-				case "up":
-					entity.solidArea.y -= entity.speed;
-					// if these two rectangles intersect
-					if(entity.solidArea.intersects(target[i].solidArea)) {
+				case "up": entity.solidArea.y -= entity.speed; break;
+				case "down": entity.solidArea.y += entity.speed; break;
+				case "left": entity.solidArea.x -= entity.speed; break;
+				case "right": entity.solidArea.x += entity.speed; break; }
+				
+				// We do not use intersects for tile otherwise have to check like EVERY tile on the screen
+				if(entity.solidArea.intersects(target[i].solidArea)) {
+					if(target[i] != entity) {
 						entity.collisionOn = true;
 						index = i;
 					}
-					break;
-				case "down":
-					entity.solidArea.y += entity.speed;
-					if(entity.solidArea.intersects(target[i].solidArea)) {
-						entity.collisionOn = true;
-						index = i;
-					}
-					break;
-				case "left":
-					entity.solidArea.x -= entity.speed;
-					if(entity.solidArea.intersects(target[i].solidArea)) {
-						entity.collisionOn = true;
-						index = i;
-					}
-					break;
-				case "right":
-					entity.solidArea.x += entity.speed;
-					// We do not use intersects for tile otherwise have to check like EVERY tile on the screen
-					if(entity.solidArea.intersects(target[i].solidArea)) {
-						entity.collisionOn = true;
-						index = i;
-					}
-					break;
 				}
+				
 				entity.solidArea.x = entity.solidAreaDefaultX;
 				entity.solidArea.y = entity.solidAreaDefaultY;
 				target[i].solidArea.x = target[i].solidAreaDefaultX;
@@ -199,54 +150,40 @@ public class CollisionCheck {
 			
 		}
 		
-		return index;
+		return index; // element in the massiv, uses in player.java
 	}
 	
 	// COLLISION PLAYER
-	public void checkPlayer(Entity entity) {
+	public boolean checkPlayer(Entity entity) {
 		
-		if(gp.player != null) {
+		boolean contactPlayer = false;
 			
-			// Get entity's solid area position
-			entity.solidArea.x = entity.worldX + entity.solidArea.x;
-			entity.solidArea.y = entity.worldY + entity.solidArea.y;
-			
-			// Get the object's solid area position
-			gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
-			gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
-			
-			switch(entity.direction) {
-			case "up":
-				entity.solidArea.y -= entity.speed;
-				// if these two rectangles intersect
-				if(entity.solidArea.intersects(gp.player.solidArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			case "down":
-				entity.solidArea.y += entity.speed;
-				if(entity.solidArea.intersects(gp.player.solidArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			case "left":
-				entity.solidArea.x -= entity.speed;
-				if(entity.solidArea.intersects(gp.player.solidArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			case "right":
-				entity.solidArea.x += entity.speed;
-				// We do not use intersects for tile otherwise have to check like EVERY tile on the screen
-				if(entity.solidArea.intersects(gp.player.solidArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			}
-			entity.solidArea.x = entity.solidAreaDefaultX;
-			entity.solidArea.y = entity.solidAreaDefaultY;
-			gp.player.solidArea.x = gp.player.solidAreaDefaultX;
-			gp.player.solidArea.y = gp.player.solidAreaDefaultY;
+		// Get entity's solid area position
+		entity.solidArea.x = entity.worldX + entity.solidArea.x;
+		entity.solidArea.y = entity.worldY + entity.solidArea.y;
+		
+		// Get the object's solid area position
+		gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
+		gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
+		
+		switch(entity.direction) {
+		case "up": entity.solidArea.y -= entity.speed; break;
+		case "down": entity.solidArea.y += entity.speed; break;
+		case "left": entity.solidArea.x -= entity.speed; break;
+		case "right": entity.solidArea.x += entity.speed; break;
 		}
+		
+		// We do not use intersects for tile otherwise have to check like EVERY tile on the screen
+		if(entity.solidArea.intersects(gp.player.solidArea)) {
+			entity.collisionOn = true;
+			contactPlayer = true;
+		}
+		
+		entity.solidArea.x = entity.solidAreaDefaultX;
+		entity.solidArea.y = entity.solidAreaDefaultY;
+		gp.player.solidArea.x = gp.player.solidAreaDefaultX;
+		gp.player.solidArea.y = gp.player.solidAreaDefaultY;
+		
+		return contactPlayer;
 	}
 }

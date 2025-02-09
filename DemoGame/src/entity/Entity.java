@@ -13,31 +13,43 @@ import main.UtilityTool;
 public class Entity {
 	
 	GamePanel gp;
-	public int worldX, worldY; // The first position
-	public int speed;
-	
 	// image with an accessible buffer of image data, represents an image in memory
 	public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
-	public String direction;
-	
-	public int spriteCounter = 0;
-	public int spriteNum = 1;
-	
-	public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+	public BufferedImage aup1, aup2, adown1, adown2, aleft1, aleft2, aright1, aright2;
+	public BufferedImage image, image2, image3;
+	public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // need for collision, red squares
+	public Rectangle attackArea = new Rectangle(0,0,0,0);
 	public int solidAreaDefaultX, solidAreaDefaultY; // for objects
 	public boolean collisionOn = false;
-	public int actionLockCounter = 0;
 	String dialogues[] = new String[20];
-	int dialogueIndex = 0;
 	
-	// CHARACTER STATUE
+	// STATE
+	public int worldX, worldY; // The first position
+	public String direction = "down";
+	public int spriteNum = 1;
+	int dialogueIndex = 0;
+	public boolean collision = false;
+	public boolean invincible = false;
+	boolean attacking = false;
+	
+	// COUNTER
+	public int spriteCounter = 0;
+	public int actionLockCounter = 0;
+	public int invinicibleCount = 0;
+	
+	// CHARACTER ATTRIBUTES
+	public int type; // 0: player, 1: npc, etc
+	public String name;
+	public int speed;
 	public int maxLife;
 	public int life;
+	
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
 	}
 	
+
 	// CHARACTER'S BEHAVIOR
 	public void setAction() {
 	
@@ -71,7 +83,19 @@ public class Entity {
 		collisionOn = false;
 		gp.checker.checkTile(this);
 		gp.checker.checkObject(this, false);
-		gp.checker.checkPlayer(this);
+		
+		// check collision between entity
+		gp.checker.checkEntity(this, gp.npc);
+		gp.checker.checkEntity(this, gp.monster);
+		boolean contactPlayer = gp.checker.checkPlayer(this);
+		
+		if(this.type == 2 && contactPlayer == true) {
+			if(gp.player.invincible == false) {
+				// damageee
+				gp.player.life -= 1;
+				gp.player.invincible = true;
+			}
+		}
 		
 		if(collisionOn == false) {
 			
@@ -148,14 +172,14 @@ public class Entity {
 		} 
 	}
 	// BUFFER OF CHARACTER
-	public BufferedImage setup(String imagePath) {
+	public BufferedImage setup(String imagePath, int width, int height) {
 		
 		UtilityTool uTool = new UtilityTool();
 		BufferedImage image = null;
 		
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-			image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+			image = uTool.scaleImage(image, width, height);
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

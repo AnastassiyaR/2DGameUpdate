@@ -94,22 +94,14 @@ public class CollisionCheck {
 						index = i;
 					}
 				}
-				
 				entity.solidArea.x = entity.solidAreaDefaultX;
 				entity.solidArea.y = entity.solidAreaDefaultY;
 				gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
 				gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
-			}
-			// so x and y do not increase since there is +
-			// entity.solidArea.x = entity.worldX + entity.solidArea.x;
-			  
-			
+			}  
 		}
-		
 		return index;
 	}
-	
-	
 	
 	// COLLISION NPC OR MONSTER
 	public int checkEntity(Entity entity, Entity[] target) {

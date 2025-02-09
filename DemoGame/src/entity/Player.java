@@ -16,6 +16,7 @@ import main.KeyHandler;
 import main.UtilityTool;
 import object.OBJ_Fireball;
 import object.OBJ_Key;
+import object.OBJ_Rock;
 import object.OBJ_Shield;
 import object.OBJ_Sword;
 
@@ -60,6 +61,9 @@ public class Player extends Entity{
 		level = 1;
 		maxLife = 6;
 		life = maxLife;
+		maxMana = 4;
+		mana = maxMana; // Crystals
+		amno = 10; // Rocks (lol)
 		strength = 1; // The more strength he has, the more damage he gives
 		dexterity = 1; // The more dexterity he has, the less damage he gets
 		exp = 0;
@@ -68,6 +72,7 @@ public class Player extends Entity{
 		currentWeapon = new OBJ_Sword(gp);
 		currentShield = new OBJ_Shield(gp);
 		projectile = new OBJ_Fireball(gp);
+//		projectile = new OBJ_Rock(gp); // just experience with rock
 		attack = getAttack();
 		defense = getDefense();
 	}
@@ -199,11 +204,14 @@ public class Player extends Entity{
  		}
 		
 		if(keyH.shotKeyPressed == true && projectile.alive == false &&
-				shotAvailableCount == 30) {
+				shotAvailableCount == 30 && projectile.haveResource(this) == true) {
 			
 			// SET DEFAULT COORDINATES, DIRECTION AND USER
 			projectile.set(worldX, worldY, direction, true, this);
 		
+			// SUBTRACT THE MANA (COST)
+			projectile.substractResource(this);
+			
 			// ADD IT TO THE LIST
 			gp.projectileList.add(projectile);
 			

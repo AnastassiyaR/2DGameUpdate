@@ -128,9 +128,15 @@ public class UI {
 		// DRAW PLAYER'S ITEMS
 		for(int i = 0; i < gp.player.inventory.size(); i++) {
 			
+			// EQUIP CURSOR
+			if(gp.player.inventory.get(i) == gp.player.currentWeapon ||
+					gp.player.inventory.get(i) == gp.player.currentShield) {
+				g2.setColor(new Color(240,190,90));
+				g2.fillRoundRect(slotX, slotY, gp.tileSize, gp.tileSize, 10, 10);
+			}
 			g2.drawImage(gp.player.inventory.get(i).down1, slotX, slotY, null);
 			
-			slotX += gp.tileSize;
+			slotX += slotSize;
 			
 			if(i == 4 || i == 9 || i == 14) {
 				slotX = slotXstart;
@@ -139,7 +145,7 @@ public class UI {
 		}
 		// CURSOR
 		int cursorX = slotXstart + (slotSize * slotCol);
-		int cursorY = slotYstart + (slotSize * slotRow);;
+		int cursorY = slotYstart + (slotSize * slotRow);
 		int cursorWidth = gp.tileSize;
 		int cursorHeight = gp.tileSize;
 		
@@ -153,16 +159,17 @@ public class UI {
 		int dframeY = frameY + frameHeight;
 		int dframeWidth = frameHeight;
 		int dframeHeight = gp.tileSize*3;
-		drawWindow(dframeX, dframeY, dframeWidth, dframeHeight);
 	
 		// DRAW DESCRIPTION TEXT
 		int textX = dframeX + 20;
 		int textY = dframeY + gp.tileSize;
-		g2.setFont(g2.getFont().deriveFont(28F));
+		g2.setFont(maruMonica.deriveFont(28F));
 		
 		int itemIndex = getItemIndexOnSlot();
 	
 		if(itemIndex < gp.player.inventory.size()) {
+			
+			drawWindow(dframeX, dframeY, dframeWidth, dframeHeight);
 			
 			for(String line : gp.player.inventory.get(itemIndex).description.split("\n")) {
 				g2.drawString(line, textX, textY);
@@ -479,7 +486,7 @@ public class UI {
 	}
 	
 	public int getItemIndexOnSlot() {
-		int itemIndex = slotCol + (slotCol*5);
+		int itemIndex = slotCol + (slotRow*5);
 		return itemIndex;
 	}
 	public void drawWindow(int x, int y, int width, int height) {

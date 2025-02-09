@@ -166,7 +166,11 @@ public class KeyHandler implements KeyListener{
 				gp.ui.slotRow++;
 			}
 		}
-	}
+		if(code == KeyEvent.VK_ENTER) {
+			gp.player.selectItem();
+			}
+		}
+
 
 	
 	@Override

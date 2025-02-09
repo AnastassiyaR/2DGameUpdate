@@ -17,7 +17,6 @@ public class GamePanel extends JPanel implements Runnable{
 	// SCREEN SETTINGS
 	final int originalTileSize = 16; // 16x16 tile, like character, water and etc.
 	final int scale = 3; // so the character is not too small 16x3=48
-	
 
 	public final int tileSize = originalTileSize * scale; 	// we do public so it is available for other packages too
 	
@@ -43,6 +42,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public CollisionCheck checker = new CollisionCheck(this);
 	public AssetSetter aSetter = new AssetSetter(this);
 	public UI ui = new UI(this);
+	public EventHandler eHandler = new EventHandler(this);
 	Thread gameThread; // keep the game working until the stop
 	
 	// ENTITY AND OBJECT

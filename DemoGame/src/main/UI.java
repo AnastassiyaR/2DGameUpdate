@@ -1,6 +1,10 @@
 package main;
 
 import java.awt.BasicStroke;
+
+import object.SuperObject;
+import object.OBJ_Heart;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -18,6 +22,7 @@ public class UI {
 	GamePanel gp;
 	Graphics2D g2;
 	Font maruMonica, pb;
+	BufferedImage heart_full, heart_half, heart_blank;
 	public boolean messageOn = false;
 	public String message = "";
 	int messageCounter = 0;
@@ -27,6 +32,7 @@ public class UI {
 	public int titleScreenState = 0; // 0: the first state, 1: second screen
 	
 	public UI(GamePanel gp) {
+		
 		this.gp = gp;
 		
 		try {
@@ -37,7 +43,15 @@ public class UI {
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
+		
+		
+		// CREATE HUD OBJECT
+		SuperObject heart = new OBJ_Heart(gp);
+		heart_full = heart.image;
+		heart_half = heart.image2;
+		heart_blank = heart.image3;
 	}
+	
 	
 	public void showMessage(String text) {
 		message = text;
@@ -56,24 +70,59 @@ public class UI {
 		if(gp.gameState == gp.titleState) {
 			drawTitleScreen();
 		}
+		
 		// PLAY STATE
 		if(gp.gameState == gp.playState) {
-			// Do playState
+			drawPlayerLife();
 
 		}
 		
 		// PAUSE STATE
 		if(gp.gameState == gp.pauseState) {
+			drawPlayerLife();
 			drawPauseScreen();
 		}
 		
 		// DIALOGUE STATE
 		if(gp.gameState == gp.dialogueState) {
+			drawPlayerLife();
 			drawDialogueScreen();
 		}
 		
 	}	
 	
+	public void drawPlayerLife() {
+		
+//		gp.player.life = 6;
+		
+		int x = gp.tileSize/2;
+		int y = gp.tileSize/2;
+		int i = 0;
+		
+		// DRAW ONLY BLANK HEARTS
+		// Means the next image will be displayed (3 hearts in total)
+		while(i < gp.player.maxLife/2) {
+			g2.drawImage(heart_blank, x, y, null);
+			i++;
+			x += gp.tileSize;
+		}
+		
+		// RESET
+		x = gp.tileSize/2;
+		y = gp.tileSize/2;
+		i = 0;
+		
+		// DRAW CURRENT LIFE
+		while(i < gp.player.life) {
+			g2.drawImage(heart_half, x, y, null);
+			i++;
+			if(i < gp.player.life) {
+				g2.drawImage(heart_full, x, y, null);
+			}
+			i++;
+			x += gp.tileSize;
+		}
+	}
 	public void drawTitleScreen() {
 		g2.setFont(maruMonica);
 		
@@ -196,6 +245,7 @@ public class UI {
 		x += gp.tileSize;
 		y += gp.tileSize;
 		
+		
 		for(String line : currentDialogue.split("\n")) {
 			g2.drawString(line, x, y);
 			y += 40;
@@ -204,8 +254,8 @@ public class UI {
 	}
 	
 	public void drawWindow(int x, int y, int width, int height) {
-		// other way to put color
 		
+		// other way to put color
 		// r, g, b, visibility
 		Color c = new Color(0, 0, 0, 200);
 		g2.setColor(c);

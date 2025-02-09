@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener{
 	// 'implements' refers to making the class implement the interface.
 
-	public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed;
+	public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, shotKeyPressed;
 	GamePanel gp;
 	
 	
@@ -39,7 +39,6 @@ public class KeyHandler implements KeyListener{
 		else if(gp.gameState == gp.characterState) {characterState(code);}
 		}
 
-	
 	public void titleState(int code) {
 		if(gp.ui.titleScreenState == 0) {
 			if(code == KeyEvent.VK_W) {
@@ -104,6 +103,7 @@ public class KeyHandler implements KeyListener{
 	}
 	
 	public void playState(int code) {
+		
 		if(code == KeyEvent.VK_W) {
 			upPressed = true;
 		}
@@ -127,6 +127,10 @@ public class KeyHandler implements KeyListener{
 	 	if(code == KeyEvent.VK_ENTER) {
 	 		enterPressed = true;
 		}
+	 	if(code == KeyEvent.VK_F) {
+	 		shotKeyPressed = true;
+		}
+
 	}
 	
 	public void pauseState(int code) {
@@ -170,8 +174,6 @@ public class KeyHandler implements KeyListener{
 			gp.player.selectItem();
 			}
 		}
-
-
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
@@ -190,6 +192,9 @@ public class KeyHandler implements KeyListener{
 		}
 		if(code == KeyEvent.VK_A) {
 			leftPressed = false;
+		}
+	 	if(code == KeyEvent.VK_F) {
+	 		shotKeyPressed = false;
 		}
 	}
 	

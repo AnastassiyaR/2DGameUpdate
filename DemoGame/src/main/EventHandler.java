@@ -76,20 +76,6 @@ public class EventHandler {
 			}
 		}
 		
-//		difference between equals and contentEquals
-//		String str1 = "hello";
-//		String str2 = "hello";
-//		StringBuilder str3 = new StringBuilder("hello");
-//
-//		System.out.println("equals:");
-//		System.out.println(str1.equals(str2));         // true
-//		System.out.println(str1.equals(str3));         // false
-//
-//		System.out.println("contentEquals:");
-//		System.out.println(str1.contentEquals(str2));  // true
-//		System.out.println(str1.contentEquals(str3));  // true
-
-		
 		gp.player.solidArea.x = gp.player.solidAreaDefaultX;
 		gp.player.solidArea.y = gp.player.solidAreaDefaultY;
 		eventRect[col][row].x = eventRect[col][row].eventRectX;

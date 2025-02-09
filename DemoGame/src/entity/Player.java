@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
+import object.OBJ_Fireball;
 import object.OBJ_Key;
 import object.OBJ_Shield;
 import object.OBJ_Sword;
@@ -66,6 +67,7 @@ public class Player extends Entity{
 		coin = 0;
 		currentWeapon = new OBJ_Sword(gp);
 		currentShield = new OBJ_Shield(gp);
+		projectile = new OBJ_Fireball(gp);
 		attack = getAttack();
 		defense = getDefense();
 	}
@@ -77,6 +79,7 @@ public class Player extends Entity{
 		inventory.add(new OBJ_Key(gp));
 		inventory.add(new OBJ_Key(gp));
 	}
+	
 	public int getAttack() {
 		attackArea = currentWeapon.attackArea;
 		return attack = strength * currentWeapon.attackValue;
@@ -85,7 +88,6 @@ public class Player extends Entity{
 	public int getDefense() {
 		return defense = dexterity * currentShield.defenseValue;
 	}
-	
 	
 	public void getPlayerImage() {
 		up1 = setup("/player/boy_up_1", gp.tileSize, gp.tileSize);
@@ -196,6 +198,19 @@ public class Player extends Entity{
 	 		}
  		}
 		
+		if(keyH.shotKeyPressed == true && projectile.alive == false &&
+				shotAvailableCount == 30) {
+			
+			// SET DEFAULT COORDINATES, DIRECTION AND USER
+			projectile.set(worldX, worldY, direction, true, this);
+		
+			// ADD IT TO THE LIST
+			gp.projectileList.add(projectile);
+			
+			gp.playSE(9);
+			
+			shotAvailableCount = 0;
+		}
 		// This needs to be outside of key if statement
 		if(invincible == true) {
 			invinicibleCount++;
@@ -203,6 +218,10 @@ public class Player extends Entity{
 				invincible = false;
 				invinicibleCount = 0;
 			}
+		}
+		// The player can next time in 1 second later
+		if(shotAvailableCount < 30) {
+			shotAvailableCount++;
 		}
 	}
 	
@@ -237,7 +256,7 @@ public class Player extends Entity{
 			
 			// Check monster collision with the updated worldX, worldy, solidArea
 			int monsterIndex = gp.checker.checkEntity(this, gp.monster);
-			damageMonster(monsterIndex);
+			damageMonster(monsterIndex, attack);
 			
 			// After checking collision, restore the original data
 			worldX = currentWorldX;
@@ -303,7 +322,7 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void damageMonster(int i) {
+	public void damageMonster(int i, int attack) {
 		
 		if(i != 999) {
 			

@@ -17,9 +17,11 @@ public class MON_GreenSlime extends Entity{
 		type = 2;
 		name = "Green Slime";
 		speed = 1;
-		maxLife = 4;
+		maxLife = 6;
 		life = maxLife;
-		
+		attack = 5;
+		defense = 0;
+		exp = 2;
 		solidArea.x = 3;
 		solidArea.y = 18;
 		solidArea.width = 42;
@@ -40,7 +42,7 @@ public class MON_GreenSlime extends Entity{
 		right2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
 	}
 	public void setAction() {
-actionLockCounter++;
+		actionLockCounter++;
 		
 		if(actionLockCounter == 60) {
 			Random random = new Random();
@@ -62,5 +64,13 @@ actionLockCounter++;
 			actionLockCounter = 0;
 			
 		}
+	}
+	
+	// MOVING AWAY
+	public void damageReaction() {
+		
+		actionLockCounter = 0;
+		direction = gp.player.direction;
+		
 	}
 }

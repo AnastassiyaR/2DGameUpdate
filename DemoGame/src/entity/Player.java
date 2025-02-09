@@ -13,12 +13,16 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
+import object.OBJ_Shield;
+import object.OBJ_Sword;
 
 public class Player extends Entity{
 	
 	KeyHandler keyH;
 	public final int screenX;
 	public final int screenY;
+	int standCounter = 0;
+	public boolean attackCanceled = false;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		super(gp);
@@ -42,6 +46,7 @@ public class Player extends Entity{
 		getPlayerAttackImage();
 		
 	}
+	
 	public void setDefaultValues() {
 		
 		worldX = gp.tileSize * 23;  // where is player, the first position
@@ -50,9 +55,29 @@ public class Player extends Entity{
 		direction = "down";
 		
 		// PLAYER STATUS
+		level = 1;
 		maxLife = 6;
 		life = maxLife;
+		strength = 1; // The more strength he has, the more damage he gives
+		dexterity = 1; // The more dexterity he has, the less damage he gets
+		exp = 0;
+		nextLevelExp = 5;
+		coin = 0;
+		currentWeapon = new OBJ_Sword(gp);
+		currentShield = new OBJ_Shield(gp);
+		attack = getAttack();
+		defense = getDefense();
 	}
+	
+	public int getAttack() {
+		return attack = strength * currentWeapon.attackValue;
+	}
+	
+	public int getDefense() {
+		return defense = dexterity * currentShield.defenseValue;
+	}
+	
+	
 	public void getPlayerImage() {
 		up1 = setup("/player/boy_up_1", gp.tileSize, gp.tileSize);
 		up2 = setup("/player/boy_up_2", gp.tileSize, gp.tileSize);
@@ -128,6 +153,12 @@ public class Player extends Entity{
 				}
 			}
 			
+			if(keyH.enterPressed == true && attackCanceled == false) {
+				attacking = true;
+				spriteCounter = 0;
+			}
+			
+			attackCanceled = false;
 			gp.keyH.enterPressed = false;
 			
 	 		spriteCounter++;
@@ -173,9 +204,25 @@ public class Player extends Entity{
 			switch(direction ) {
 			case "up": worldY -= attackArea.height; break;
 			case "down": worldY += attackArea.height; break;
+			case "left": worldX -= attackArea.width; break;
+			case "right": worldX += attackArea.width; break;
 			}
 			
+			// attackArea becomes solidArea
+			solidArea.width = attackArea.width;
+			solidArea.height = attackArea.height;
+			
+			// Check monster collision with the updated worldX, worldy, solidArea
+			int monsterIndex = gp.checker.checkEntity(this, gp.monster);
+			damageMonster(monsterIndex);
+			
+			// After checking collision, restore the original data
+			worldX = currentWorldX;
+			worldY = currentWorldY;
+			solidArea.width = solidAreaWidth;
+			solidArea.height = solidAreaHeight;
 		}
+		
 		if(spriteCounter > 25) {
 			spriteNum = 1;
 			spriteCounter = 0;
@@ -186,7 +233,7 @@ public class Player extends Entity{
 	// PICK OBJECT SETTINGS
 	public void pickUpObject (int i) {
 		if(i != 999) {
-			//pass
+			// pass
 		}
 	}
 	
@@ -196,11 +243,10 @@ public class Player extends Entity{
 		
 		if(gp.keyH.enterPressed == true) {
 			if(i != 999) {
+				attackCanceled = true;
 				gp.gameState = gp.dialogueState;
 				gp.npc[i].speak();
-			} else {
-				attacking = true;
-			}
+			} 
 		}
 	}
 	
@@ -209,15 +255,66 @@ public class Player extends Entity{
 		
 		if(i!=999) {
 			if(invincible == false) {
-				life-=1;
+				gp.playSE(6);
+				
+				int damage = gp.monster[i].attack - defense;
+				if(damage < 0) {
+					damage = 0;
+				}
+				
+				life-= damage;
 				invincible = true;
 			}
 		}
-		
 	}
 	
+	public void damageMonster(int i) {
+		
+		if(i != 999) {
+			
+			if(gp.monster[i].invincible == false) {
+				
+				gp.playSE(5);
+				
+				int damage = attack - gp.monster[i].defense;
+				if(damage < 0) {
+					damage = 0;
+				}
+				gp.monster[i].life -= damage;
+				gp.ui.addMessage(damage + " DAMAGE");
+				
+				gp.monster[i].invincible = true;
+				gp.monster[i].damageReaction();
+				
+				if(gp.monster[i].life <= 0) {
+					gp.monster[i].dying = true;
+					gp.ui.addMessage("KILLED THE " + gp.monster[i].name);
+					gp.ui.addMessage("Exp " + gp.monster[i].exp);
+					exp += gp.monster[i].exp;
+					checkLevelUp();
+				}
+			}
+		} else {
+			
+		}
+	}
 	
-	
+	public void checkLevelUp() {
+		
+		if(exp >= nextLevelExp) {
+			level++;
+			nextLevelExp = nextLevelExp*2;
+			maxLife += 2;
+			strength++;
+			dexterity++;
+			attack = getAttack();
+			defense = getDefense();
+			
+			gp.playSE(8);
+			gp.gameState = gp.dialogueState;
+			gp.ui.currentDialogue = "Level " + level;
+		}
+	}
 	// DRAW DURING CHANGING MOVEMENT
 	public void draw(Graphics2D g2) {
 		
@@ -275,7 +372,7 @@ public class Player extends Entity{
 		}
 		
 		if(invincible == true) {
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 		}
 		// null - if the image is already loaded into memory and does not require loading images to be processed
 		// the gp.tileSize (as width and height was deleted) because of setup()

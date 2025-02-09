@@ -108,9 +108,9 @@ public class EventHandler {
 	public void damagePit(int col, int row, int gameState) {
 		
 		gp.gameState = gameState;
+		gp.playSE(6);
 		gp.ui.currentDialogue = "Eh, you fall";
 		gp.player.life -= 1;
-//		eventRect[col][row].eventDone = true;
 		canTouchEvent = false;
 	}
 	
@@ -118,9 +118,11 @@ public class EventHandler {
 		
 		if(gp.keyH.enterPressed == true) {
 			gp.gameState = gameState;
+			gp.player.attackCanceled = true;
 			gp.ui.currentDialogue = "Drink drink";
 			gp.player.life = gp.player.maxLife;
 			canTouchEvent = false;
+			gp.aSetter.setMonster();
 		}
 		
 	}

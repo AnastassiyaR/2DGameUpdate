@@ -7,12 +7,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
+import object.OBJ_Key;
 import object.OBJ_Shield;
 import object.OBJ_Sword;
 
@@ -23,6 +25,8 @@ public class Player extends Entity{
 	public final int screenY;
 	int standCounter = 0;
 	public boolean attackCanceled = false;
+	public ArrayList<Entity> inventory = new ArrayList<>();
+	public final int maxInventorySize = 20;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		super(gp);
@@ -44,6 +48,7 @@ public class Player extends Entity{
 		setDefaultValues();
 		getPlayerImage();
 		getPlayerAttackImage();
+		setItems();
 		
 	}
 	
@@ -69,6 +74,13 @@ public class Player extends Entity{
 		defense = getDefense();
 	}
 	
+	public void setItems() {
+		
+		inventory.add(currentShield);
+		inventory.add(currentWeapon);
+		inventory.add(new OBJ_Key(gp));
+		inventory.add(new OBJ_Key(gp));
+	}
 	public int getAttack() {
 		return attack = strength * currentWeapon.attackValue;
 	}
@@ -315,6 +327,7 @@ public class Player extends Entity{
 			gp.ui.currentDialogue = "Level " + level;
 		}
 	}
+	
 	// DRAW DURING CHANGING MOVEMENT
 	public void draw(Graphics2D g2) {
 		

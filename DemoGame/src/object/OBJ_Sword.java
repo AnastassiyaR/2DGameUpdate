@@ -12,5 +12,6 @@ public class OBJ_Sword extends Entity{
 		name = "Sword";
 		down1 = setup("/objects/sword", gp.tileSize, gp.tileSize);
 		attackValue = 1;
+		description = name + "!";
 	}
 }

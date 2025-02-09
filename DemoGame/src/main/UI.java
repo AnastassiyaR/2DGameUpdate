@@ -120,12 +120,26 @@ public class UI {
 		// SLOT
 		final int slotXstart = frameX + 20;
 		final int slotYstart = frameY + 20;
-		final int slotX = slotXstart;
-		final int slotY = slotYstart;
+		int slotX = slotXstart;
+		int slotY = slotYstart;
+		int slotSize = gp.tileSize+3;
 		
+		
+		// DRAW PLAYER'S ITEMS
+		for(int i = 0; i < gp.player.inventory.size(); i++) {
+			
+			g2.drawImage(gp.player.inventory.get(i).down1, slotX, slotY, null);
+			
+			slotX += gp.tileSize;
+			
+			if(i == 4 || i == 9 || i == 14) {
+				slotX = slotXstart;
+				slotY += slotSize;
+			}
+		}
 		// CURSOR
-		int cursorX = slotXstart + (gp.tileSize * slotCol);
-		int cursorY = slotYstart + (gp.tileSize * slotRow);;
+		int cursorX = slotXstart + (slotSize * slotCol);
+		int cursorY = slotYstart + (slotSize * slotRow);;
 		int cursorWidth = gp.tileSize;
 		int cursorHeight = gp.tileSize;
 		
@@ -133,6 +147,30 @@ public class UI {
 		g2.setColor(Color.white);
 		g2.setStroke(new BasicStroke(3));
 		g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
+	
+		// DESCRIPTION FRAME
+		int dframeX = frameX;
+		int dframeY = frameY + frameHeight;
+		int dframeWidth = frameHeight;
+		int dframeHeight = gp.tileSize*3;
+		drawWindow(dframeX, dframeY, dframeWidth, dframeHeight);
+	
+		// DRAW DESCRIPTION TEXT
+		int textX = dframeX + 20;
+		int textY = dframeY + gp.tileSize;
+		g2.setFont(g2.getFont().deriveFont(28F));
+		
+		int itemIndex = getItemIndexOnSlot();
+	
+		if(itemIndex < gp.player.inventory.size()) {
+			
+			for(String line : gp.player.inventory.get(itemIndex).description.split("\n")) {
+				g2.drawString(line, textX, textY);
+				textY += 32;
+			}
+			
+		}
+	
 	}
 	
 	public void drawMessage() {
@@ -163,6 +201,7 @@ public class UI {
 			}
 		}
 	}
+	
 	// HEARTS AND SENSE ABOUT P + CTRL
 	public void drawPlayerLife() {
 
@@ -170,7 +209,7 @@ public class UI {
 		// TEXT
 		g2.setFont(pb);
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD,16F));
-		String text = "(CTRL + C) = ATTRIBUTES\n(COMMAND + P) = PAUSE";
+		String text = "(CTRL + C) = ATTRIBUTES\n(CTRL + P) = PAUSE";
 		int x = gp.tileSize/2;
 		int y = gp.tileSize*2;
 		
@@ -346,6 +385,7 @@ public class UI {
 		
 	}
 	
+	
 	public void drawCharacterScreen() {
 		
 		// CREATE A FRAME
@@ -438,6 +478,10 @@ public class UI {
 		g2.drawImage(gp.player.currentShield.down1, tailX - gp.tileSize, textY, null);
 	}
 	
+	public int getItemIndexOnSlot() {
+		int itemIndex = slotCol + (slotCol*5);
+		return itemIndex;
+	}
 	public void drawWindow(int x, int y, int width, int height) {
 		
 		// other way to put color

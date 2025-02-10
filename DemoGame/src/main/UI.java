@@ -113,46 +113,47 @@ public class UI {
 		}
 		
 		// GAMEOVER STATE
-//		if(gp.gameState == gp.gameover) {
-//			Gameover();
-//		}
+		if(gp.gameState == gp.gameover) {
+			GameoverScreen();
+		}
 		
 	}
 	
-//	public void Gameover() {
-//		
-//		
-//		g2.setFont(pb);
-//		
-//		g2.setColor(new Color(0, 0, 0, 100));
-//		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-//
-//		g2.setFont(g2.getFont().deriveFont(Font.BOLD,90F));
-//		String text = "GAMEOVER";
-//		int x = getXforCenteredText(text);
-//		int y = gp.screenHeight/3;
-//		
-//		g2.setColor(Color.black);
-//		g2.drawString(text, x, y);
-//		g2.setColor(Color.white);
-//		g2.drawString(text, x-5, y-5);
-//		
-//		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,32F));
-//		text = "Retry";
-//		y+=gp.tileSize*4;
-//		g2.drawString(text, x, y);
-//		if(commandNum == 0) {
-//			g2.drawString(">", x-25, y);
-//		}
-//		
-//		text = "Quit";
-//		x+=gp.tileSize*8;
-//		g2.drawString(text, x, y);
-//		if(commandNum == 1) {
-//			g2.drawString(">", x-25, y);
-//		}
-//		
-//	}
+	public void GameoverScreen() {
+		
+		
+		g2.setFont(pb);
+		
+		g2.setColor(new Color(0, 0, 0, 100));
+		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD,90F));
+		String text = "GAMEOVER";
+		int x = getXforCenteredText(text);
+		int y = gp.screenHeight/3;
+		
+		g2.setColor(Color.black);
+		g2.drawString(text, x, y);
+		g2.setColor(Color.white);
+		g2.drawString(text, x-5, y-5);
+		
+		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,32F));
+		text = "Retry";
+		y+=gp.tileSize*4;
+		g2.drawString(text, x, y);
+		if(commandNum == 0) {
+			g2.drawString(">", x-25, y);
+		}
+		
+		text = "Quit";
+		x+=gp.tileSize*8;
+		g2.drawString(text, x, y);
+		if(commandNum == 1) {
+			g2.drawString(">", x-25, y);
+		}
+		
+	}
+	
 	
 	public void drawOptionsScreen() {
 		

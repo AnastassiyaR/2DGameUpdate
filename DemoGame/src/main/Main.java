@@ -4,12 +4,14 @@ import javax.swing.JFrame;
 
 public class Main {
 
+	
 	public static void main(String[] args) {
 		// To close window properly once we click X button
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
 		window.setResizable(false);
 		window.setTitle("Blue guy adventure");
+//		window.setUndecorated(true);// no buttons on the screen
 		
 		GamePanel gamePanel = new GamePanel();
 		window.add(gamePanel);

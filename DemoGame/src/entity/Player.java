@@ -168,6 +168,9 @@ public class Player extends Entity{
 			int monsterIndex = gp.checker.checkEntity(this, gp.monster);
 			contactmonster(monsterIndex);
 			
+			// CHECK DRY TREE
+			int iTileIndex = gp.checker.checkEntity(this, gp.iTile);
+			
 			// CHECK EVENT
 			gp.eHandler.checkEvent();
 
@@ -231,6 +234,12 @@ public class Player extends Entity{
 		if(shotAvailableCount < 30) {
 			shotAvailableCount++;
 		}
+		if(life > maxLife) {
+			life = maxLife;
+		}
+		if(mana > maxMana) {
+			mana = maxMana;
+		}
 	}
 	
 	// ATTACK
@@ -266,6 +275,10 @@ public class Player extends Entity{
 			int monsterIndex = gp.checker.checkEntity(this, gp.monster);
 			damageMonster(monsterIndex, attack);
 			
+			// Check dry tree
+			int iTileIndex = gp.checker.checkEntity(this, gp.iTile);
+			damageTree(iTileIndex);
+			
 			// After checking collision, restore the original data
 			worldX = currentWorldX;
 			worldY = currentWorldY;
@@ -284,18 +297,29 @@ public class Player extends Entity{
 	public void pickUpObject (int i) {
 		if(i != 999) {
 			
-			String text;
-			
-			if(inventory.size() != maxInventorySize) {
-				inventory.add(gp.obj[i]);
-				gp.playSE(1);
+			// PICKUP ONLY ITEMS
+			if(gp.obj[i].type == type_pickup) {
 				
-				text = "Got " + gp.obj[i].name;
-			} else {
-				text = "no more items.";
+				gp.obj[i].use(this);
+				gp.obj[i] = null;
 			}
-			gp.ui.addMessage(text);
-			gp.obj[i] = null;
+			
+			// INVENTORY ITEMS
+			else { 
+
+				String text;
+			
+				if(inventory.size() != maxInventorySize) {
+					inventory.add(gp.obj[i]);
+					gp.playSE(1);
+					
+					text = "Got " + gp.obj[i].name;
+				} else {
+					text = "no more items.";
+				}
+				gp.ui.addMessage(text);
+				gp.obj[i] = null;
+			}
 		}
 	}
 	
@@ -330,6 +354,7 @@ public class Player extends Entity{
 		}
 	}
 	
+	// DAMAGE MONSTER
 	public void damageMonster(int i, int attack) {
 		
 		if(i != 999) {
@@ -389,6 +414,7 @@ public class Player extends Entity{
 				
 				currentWeapon = selectedItem;
 				attack = getAttack();
+				getPlayerAttackImage();
 			}
 			if(selectedItem.type == type_shield) {
 				
@@ -401,6 +427,27 @@ public class Player extends Entity{
 			}
 		}
 	}
+	
+	public void damageTree(int i) {
+		
+		if(i != 999 && gp.iTile[i].destructible == true &&
+				gp.iTile[i].CorrectItem(this) == true &&
+				gp.iTile[i].invincible == false) {
+			
+			gp.iTile[i].playSE();
+			gp.iTile[i].life--;
+			gp.iTile[i].invincible = true;
+			
+			// GENERATE PARTICLES
+			generateParticle(gp.iTile[i], gp.iTile[i]);
+			
+			if(gp.iTile[i].life == 0) {
+				gp.iTile[i] = gp.iTile[i].DestroyForm();
+			}
+			
+		}
+	}
+	
 	// DRAW DURING CHANGING MOVEMENT
 	public void draw(Graphics2D g2) {
 		

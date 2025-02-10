@@ -77,6 +77,18 @@ public class Player extends Entity{
 		defense = getDefense();
 	}
 	
+	public void setDefaultPosition() {
+		
+		worldX = gp.tileSize * 23;
+		worldY = gp.tileSize * 21;
+		direction = "down";
+	}
+	public void restoreLife() {
+		
+		life = maxLife;
+		
+	}
+	
 	public void setItems() {
 		
 		inventory.add(currentShield);
@@ -240,6 +252,9 @@ public class Player extends Entity{
 		if(mana > maxMana) {
 			mana = maxMana;
 		}
+		if(life <= 0) {
+			gp.gameState = gp.gameover;
+		}
 	}
 	
 	// ATTACK
@@ -294,7 +309,7 @@ public class Player extends Entity{
 	}
 	
 	// PICK OBJECT SETTINGS
-	public void pickUpObject (int i) {
+	public void pickUpObject(int i) {
 		if(i != 999) {
 			
 			// PICKUP ONLY ITEMS
@@ -302,6 +317,7 @@ public class Player extends Entity{
 				
 				gp.obj[i].use(this);
 				gp.obj[i] = null;
+				
 			}
 			
 			// INVENTORY ITEMS

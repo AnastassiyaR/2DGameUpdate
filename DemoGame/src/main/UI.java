@@ -35,7 +35,7 @@ public class UI {
 	public int titleScreenState = 0; // 0: the first state, 1: second screen
 	public int slotCol = 0;
 	public int slotRow = 0;
-	
+	int subState = 0;
 	
 	public UI(GamePanel gp) {
 		
@@ -107,7 +107,231 @@ public class UI {
 			drawInventory();
 		}
 		
-	}	
+		// OPTIONS STATE
+		if(gp.gameState == gp.optionsState) {
+			drawOptionsScreen();
+		}
+		
+		// GAMEOVER STATE
+//		if(gp.gameState == gp.gameover) {
+//			Gameover();
+//		}
+		
+	}
+	
+//	public void Gameover() {
+//		
+//		
+//		g2.setFont(pb);
+//		
+//		g2.setColor(new Color(0, 0, 0, 100));
+//		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+//
+//		g2.setFont(g2.getFont().deriveFont(Font.BOLD,90F));
+//		String text = "GAMEOVER";
+//		int x = getXforCenteredText(text);
+//		int y = gp.screenHeight/3;
+//		
+//		g2.setColor(Color.black);
+//		g2.drawString(text, x, y);
+//		g2.setColor(Color.white);
+//		g2.drawString(text, x-5, y-5);
+//		
+//		g2.setFont(g2.getFont().deriveFont(Font.PLAIN,32F));
+//		text = "Retry";
+//		y+=gp.tileSize*4;
+//		g2.drawString(text, x, y);
+//		if(commandNum == 0) {
+//			g2.drawString(">", x-25, y);
+//		}
+//		
+//		text = "Quit";
+//		x+=gp.tileSize*8;
+//		g2.drawString(text, x, y);
+//		if(commandNum == 1) {
+//			g2.drawString(">", x-25, y);
+//		}
+//		
+//	}
+	
+	public void drawOptionsScreen() {
+		
+		g2.setColor(Color.white);
+		g2.setFont(maruMonica.deriveFont(32F));
+		
+		// WINDOW
+		int frameX = gp.tileSize*4;
+		int frameY = gp.tileSize;
+		int frameWidth = gp.tileSize*8;
+		int frameHeight = gp.tileSize*10;
+		drawWindow(frameX, frameY, frameWidth, frameHeight);
+		
+		switch(subState) {
+		case 0: options_top(frameX, frameY); break;
+		case 1: options_control(frameX, frameY); break;
+		case 2: finishgame(frameX, frameY); break;
+		}
+		
+		gp.keyH.enterPressed = false;
+	}
+	
+	
+	public void options_control(int frameX, int frameY) {
+		
+		int textX;
+		int textY;
+		
+		// TITLE
+		String text = "Control";
+		textX = getXforCenteredText(text);
+		textY = frameY + gp.tileSize;
+		g2.drawString(text, textX, textY);
+		
+		textX = frameX + gp.tileSize;
+		textY += gp.tileSize;
+		g2.drawString("Move", textX, textY); textY += gp.tileSize;
+		g2.drawString("Attack", textX, textY); textY += gp.tileSize;
+		g2.drawString("Shoot", textX, textY); textY += gp.tileSize;
+		g2.drawString("Character Screen", textX, textY); textY += gp.tileSize;
+		g2.drawString("Pause", textX, textY); textY += gp.tileSize;
+		g2.drawString("Options", textX, textY); textY += gp.tileSize;
+		
+		textX = frameX + gp.tileSize*6;
+		textY = frameY + gp.tileSize*2;
+		g2.drawString("WASD", textX, textY); textY += gp.tileSize;
+		g2.drawString("ENTER", textX, textY); textY += gp.tileSize;
+		g2.drawString("F", textX, textY); textY += gp.tileSize;
+		g2.drawString("C", textX, textY); textY += gp.tileSize;
+		g2.drawString("P", textX, textY); textY += gp.tileSize;
+		g2.drawString("1", textX, textY); textY += gp.tileSize;
+		
+		// BACK
+		textX = frameX + gp.tileSize;
+		textY = frameY + gp.tileSize*9;
+		g2.drawString("BACK", textX, textY);
+		if(commandNum == 0) {
+			g2.drawString(">", textX-25, textY);
+			if(gp.keyH.enterPressed == true) {
+				subState = 0;
+				commandNum = 2;
+			}
+		}
+		
+	}
+	
+	public void options_top(int frameX, int frameY) {
+		
+		int textX;
+		int textY;
+		
+		// TITLE
+		String text = "Options";
+		textX = getXforCenteredText(text);
+		textY = frameY + gp.tileSize;
+		g2.drawString(text, textX, textY);
+		
+		// MUSIC
+		textX = frameX + gp.tileSize;
+		textY += gp.tileSize;
+		g2.drawString("Music", textX, textY);
+		if(commandNum == 0) {
+			g2.drawString(">", textX-25, textY);
+		}
+		// SE
+		textY += gp.tileSize;
+		g2.drawString("SE", textX, textY);
+		if(commandNum == 1) {
+			g2.drawString(">", textX-25, textY);
+		}
+		
+		// CONTROL
+		textY += gp.tileSize;
+		g2.drawString("Control", textX, textY);
+		if(commandNum == 2) {
+			g2.drawString(">", textX-25, textY);
+			if(gp.keyH.enterPressed == true) {
+				subState = 1;
+				commandNum = 0;
+			}
+		}
+		
+		// END GAME
+		textY += gp.tileSize;
+		g2.drawString("End game", textX, textY);
+		if(commandNum == 3) {
+			g2.drawString(">", textX-25, textY);
+			if(gp.keyH.enterPressed == true) {
+				subState = 2;
+				commandNum = 0;
+			}
+		}
+		
+		// BACK
+		textY += gp.tileSize*4;
+		g2.drawString("Back", textX, textY);
+		if(commandNum == 4) {
+			g2.drawString(">", textX-25, textY);
+			if(gp.keyH.enterPressed == true) {
+				gp.gameState = gp.playState;
+				commandNum = 0;
+			}
+		}
+		
+		textX = frameX + gp.tileSize*4;
+		textY = frameY + gp.tileSize/2;
+		
+		// MUSIC VOLUME
+		textY += gp.tileSize;
+		g2.setStroke(new BasicStroke(2));
+		g2.drawRect(textX, textY, 150, 24);
+		int volumeWidth = 30 * gp.music.volumeScale;
+		g2.fillRect(textX, textY, volumeWidth, 24);
+		
+		// SE VOLUME
+		textY += gp.tileSize;
+		g2.setStroke(new BasicStroke(2));
+		g2.drawRect(textX, textY, 150, 24);
+		volumeWidth = 30 * gp.se.volumeScale;
+		g2.fillRect(textX, textY, volumeWidth, 24);
+	}
+	
+	public void finishgame(int frameX, int frameY) {
+		
+		int textX = frameX + gp.tileSize;
+		int textY = frameY + gp.tileSize*3;
+		
+		
+		String text = "Quit?";
+		g2.setFont(maruMonica.deriveFont(64F));
+		g2.drawString(text, textX, textY);
+		
+		// YES
+		text = "Yes";
+		g2.setFont(maruMonica.deriveFont(46F));
+		textY += gp.tileSize*2;
+		g2.drawString(text, textX, textY);
+		if(commandNum == 0) {
+			g2.drawString(">", textX-25, textY);
+			if(gp.keyH.enterPressed == true) {
+				subState = 0;
+				gp.gameState = gp.titleState;
+			}
+		}
+		// NO
+		text = "No";
+		g2.setFont(maruMonica.deriveFont(46F));
+		textY += gp.tileSize*2;
+		g2.drawString(text, textX, textY);
+		if(commandNum == 1) {
+			g2.drawString(">", textX-25, textY);
+			if(gp.keyH.enterPressed == true) {
+				subState = 0;
+				commandNum = 3;
+			}
+		}
+	}
+	
+	
 	public void drawInventory() {
 		
 		// FRAME
@@ -364,7 +588,6 @@ public class UI {
 			x = getXforCenteredText(text);
 			y += gp.tileSize*2;
 			g2.drawString(text, x, y);
-			
 			if(commandNum == 3) {
 				g2.drawString(">", x-gp.tileSize, y);
 			}

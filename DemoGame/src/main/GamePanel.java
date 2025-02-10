@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable{
 	// WORLD SETTINGS
 	public final int maxWorldCol = 50; //text has 50x50
 	public final int maxWorldRow = 50;
-	
+
 	// FPS
 	int FPS = 60;
 			
@@ -64,7 +64,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int pauseState = 2;
 	public final int dialogueState = 3;
 	public final int characterState = 4;
-	
+	public final int optionsState = 5;
+	public final int gameover = 6;
 	
 	// GAMEPANEL
 	public GamePanel() {
@@ -82,15 +83,12 @@ public class GamePanel extends JPanel implements Runnable{
 		aSetter.setMonster();
 		aSetter.setTree();
 		gameState = titleState;
-		
-		
 	}
 	
 	// START GAME
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
-		
 	}
 	
  	
@@ -122,7 +120,6 @@ public class GamePanel extends JPanel implements Runnable{
  				drawCount = 0;
  				timer = 0;
  			}
- 			
  		}
  	}
  	
@@ -189,9 +186,8 @@ public class GamePanel extends JPanel implements Runnable{
  			}
  		}
  		
- 		if(gameState == pauseState) {
- 			// nothing
- 		}
+ 		if(gameState == pauseState) {}
+ 		
  		for(int i = 0; i < monster.length; i++) {
  			if(monster[i] != null) {
  				monster[i].update();
@@ -290,4 +286,3 @@ public class GamePanel extends JPanel implements Runnable{
  	}
  
 }
-

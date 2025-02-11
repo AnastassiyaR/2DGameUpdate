@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -77,11 +78,14 @@ public class Entity {
 	public final int type_pickup = 7;
 	
 	// ITEM ATTRIBUTES
+	public ArrayList<Entity> inventory = new ArrayList<>();
+	public final int maxInventorySize = 20;
 	public int value; // in case potion +5hp
 	public int attackValue;
 	public int defenseValue;
 	public String description = "";
 	public int useCost;
+	public int price;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
@@ -124,10 +128,10 @@ public class Entity {
 	public void dropItem(Entity droppedItem) {
 		
 		for(int i = 0; i < gp.obj.length; i++) {
-			if(gp.obj[i] == null) {
-				gp.obj[i] = droppedItem;
-				gp.obj[i].worldX = worldX;
-				gp.obj[i].worldY = worldY;
+			if(gp.obj[gp.currentMap][i] == null) {
+				gp.obj[gp.currentMap][i] = droppedItem;
+				gp.obj[gp.currentMap][i].worldX = worldX;
+				gp.obj[gp.currentMap][i].worldY = worldY;
 				break;
 			}
 		}
@@ -197,7 +201,7 @@ public class Entity {
 		
 		// down1 to down 2
  		spriteCounter++;
- 		if(spriteCounter > 15) {
+ 		if(spriteCounter > 24) {
  			if(spriteNum == 1) {
  				spriteNum = 2;
  			}

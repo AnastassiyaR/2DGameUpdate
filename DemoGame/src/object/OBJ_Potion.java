@@ -16,6 +16,7 @@ public class OBJ_Potion extends Entity{
 		value = 5;
 		down1 = setup("/objects/potion_red", gp.tileSize, gp.tileSize);
 		description = name + "!";
+		price = 75;
 	}
 	public void use(Entity entity) {
 		

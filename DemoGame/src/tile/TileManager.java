@@ -16,16 +16,17 @@ public class TileManager {
 	
 	GamePanel gp;
 	public Tile[] tile;
-	public int mapTileNum[][];
+	public int mapTileNum[][][];
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
 		
 		tile = new Tile[50];
-		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+		mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 		
 		getTileImage();
-		loadMap("/maps/worldmap.txt");
+		loadMap("/maps/worldmap.txt", 0);
+		loadMap("/maps/interior.txt", 1);
 	}
 	public void getTileImage() {
 		
@@ -74,35 +75,11 @@ public class TileManager {
 		setup(39, "earth", false);
 		setup(40, "wall", true);
 		setup(41, "tree", true);
-		// setup(42, "trunk", true);
+		setup(42, "hut", false);
+		setup(43, "floor", false);
+		setup(44, "table", true);
+//		setup(42, "trunk", true);
 		
-
-//		try {
-//
-//			tile[0] = new Tile();
-//			tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass.png"));
-//
-//			tile[1] = new Tile();
-//			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
-//			tile[1].collision = true;
-//	
-//			tile[2] = new Tile();
-//			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png"));
-//			tile[2].collision = true;
-//
-//			tile[3] = new Tile();
-//			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/earth.png"));
-//			
-//			tile[4] = new Tile();
-//			tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
-//			tile[4].collision = true;
-//			
-//			tile[5] = new Tile();
-//			tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
-//			
-//		} catch(IOException e) {
-//			e.printStackTrace();
-//		}
 	
 	}
 	// handle all the half-duplicated lines 
@@ -121,7 +98,7 @@ public class TileManager {
 		}
 		
 	}
-	public void loadMap(String filePath) {
+	public void loadMap(String filePath, int map) {
 		
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
@@ -141,7 +118,7 @@ public class TileManager {
 					
 					int num = Integer.parseInt(numbers[col]);
 					
-					mapTileNum[col][row] = num;
+					mapTileNum[map][col][row] = num;
 					col++;
 				}
 				if(col == gp.maxWorldRow) {
@@ -165,7 +142,7 @@ public class TileManager {
 		
 		while(worldcol < gp.maxWorldCol && worldrow < gp.maxWorldRow) {
 			
-			int tileNum = mapTileNum[worldcol][worldrow];
+			int tileNum = mapTileNum[gp.currentMap][worldcol][worldrow];
 			
 			int worldx = worldcol * gp.tileSize;
 			int worldy = worldrow * gp.tileSize;

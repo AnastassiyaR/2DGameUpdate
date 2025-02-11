@@ -15,5 +15,6 @@ public class OBJ_Shield extends Entity{
 		down1 = setup("/objects/shield", gp.tileSize, gp.tileSize);
 		defenseValue = 1;
 		description = name + "!\nSHIELDDD";
+		price = 75;
 	}
 }

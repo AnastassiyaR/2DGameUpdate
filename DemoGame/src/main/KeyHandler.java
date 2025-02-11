@@ -43,8 +43,42 @@ public class KeyHandler implements KeyListener{
 		
 		// GAME OVER
 		else if(gp.gameState == gp.gameover) {gameover(code);}
+	
+		// TRADE STATE
+		else if(gp.gameState == gp.tradeState) {tradeState(code);}
 		}
 
+	public void tradeState(int code) {
+		if(code == KeyEvent.VK_ENTER) {
+			enterPressed = true;
+		}
+		
+		if(code == KeyEvent.VK_W) {
+			gp.ui.commandNum--;
+			if(gp.ui.commandNum < 0) {
+				gp.ui.commandNum = 2;
+			}
+		}
+		if(code == KeyEvent.VK_S) {
+			gp.ui.commandNum++;
+			if(gp.ui.commandNum > 2) {
+				gp.ui.commandNum = 0;
+			}
+		}
+		if(gp.ui.subState == 1) {
+			npcInventory(code);
+			if(code == KeyEvent.VK_ESCAPE) {
+				gp.ui.subState = 0;
+			}
+		}
+		if(gp.ui.subState == 2) {
+			playerInventory(code);
+			if(code == KeyEvent.VK_ESCAPE) {
+				gp.ui.subState = 0;
+			}
+		}
+		
+	}
 	public void gameover(int code) {
 		if(code == KeyEvent.VK_A) {
 			gp.ui.commandNum--;
@@ -133,7 +167,6 @@ public class KeyHandler implements KeyListener{
 				}
 				if(gp.ui.commandNum == 2) {
 					gp.gameState = gp.playState;
-//					gp.playMusic(0);
 				}
 				if(gp.ui.commandNum == 3) {
 					gp.ui.titleScreenState = 0;
@@ -173,6 +206,12 @@ public class KeyHandler implements KeyListener{
 	 	if(code == KeyEvent.VK_1) {
 	 		gp.gameState = gp.optionsState;
 		}
+	 	if(code == KeyEvent.VK_R) {
+	 		switch(gp.currentMap) {
+	 		case 0: gp.tileM.loadMap("/maps/worldmap.txt", 0); break;
+	 		case 1: gp.tileM.loadMap("/maps/interior.txt", 1); break;
+	 		}
+	 	}
 
 	}
 	
@@ -193,29 +232,11 @@ public class KeyHandler implements KeyListener{
 			gp.gameState = gp.playState;
 		}
 		
-		if(code == KeyEvent.VK_W) {
-			if(gp.ui.slotRow != 0) {
-				gp.ui.slotRow--;
-			}
-		}
-		if(code == KeyEvent.VK_A) {
-			if(gp.ui.slotCol != 0) {
-				gp.ui.slotCol--;
-			}
-		}
-		if(code == KeyEvent.VK_D) {
-			if(gp.ui.slotCol != 4) {
-				gp.ui.slotCol++;
-			}
-		}
-		if(code == KeyEvent.VK_S) {
-			if(gp.ui.slotRow != 3) {
-				gp.ui.slotRow++;
-			}
-		}
 		if(code == KeyEvent.VK_ENTER) {
 			gp.player.selectItem();
 			}
+		
+		playerInventory(code);
 		}
 	
 	public void optionsState(int code) {
@@ -279,6 +300,55 @@ public class KeyHandler implements KeyListener{
 		
 		
 	}
+	public void playerInventory(int code) {
+		
+		if(code == KeyEvent.VK_W) {
+			if(gp.ui.PslotRow != 0) {
+				gp.ui.PslotRow--;
+			}
+		}
+		if(code == KeyEvent.VK_A) {
+			if(gp.ui.PslotCol != 0) {
+				gp.ui.PslotCol--;
+			}
+		}
+		if(code == KeyEvent.VK_D) {
+			if(gp.ui.PslotCol != 4) {
+				gp.ui.PslotCol++;
+			}
+		}
+		if(code == KeyEvent.VK_S) {
+			if(gp.ui.PslotRow != 3) {
+				gp.ui.PslotRow++;
+			}
+		}
+		
+	}
+	public void npcInventory(int code) {
+		
+		if(code == KeyEvent.VK_W) {
+			if(gp.ui.npcSlotRow != 0) {
+				gp.ui.npcSlotRow--;
+			}
+		}
+		if(code == KeyEvent.VK_A) {
+			if(gp.ui.npcSlotCol != 0) {
+				gp.ui.npcSlotCol--;
+			}
+		}
+		if(code == KeyEvent.VK_D) {
+			if(gp.ui.npcSlotCol != 4) {
+				gp.ui.npcSlotCol++;
+			}
+		}
+		if(code == KeyEvent.VK_S) {
+			if(gp.ui.npcSlotRow != 3) {
+				gp.ui.npcSlotRow++;
+			}
+		}
+		
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub

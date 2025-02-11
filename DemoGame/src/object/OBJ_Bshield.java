@@ -13,5 +13,6 @@ public class OBJ_Bshield extends Entity{
 		name = "Blue shield";
 		down1 = setup("/objects/bshield", gp.tileSize, gp.tileSize);
 		description = name + "!";
+		price = 75;
 	}
 }

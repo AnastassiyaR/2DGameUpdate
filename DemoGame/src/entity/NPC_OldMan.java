@@ -3,6 +3,12 @@ package entity;
 import java.util.Random;
 
 import main.GamePanel;
+import object.OBJ_Axe;
+import object.OBJ_Bshield;
+import object.OBJ_Key;
+import object.OBJ_Potion;
+import object.OBJ_Shield;
+import object.OBJ_Sword;
 
 
 public class NPC_OldMan extends Entity{
@@ -28,6 +34,7 @@ public class NPC_OldMan extends Entity{
 		left2 = setup("/npc/oldman_left_2", gp.tileSize, gp.tileSize);
 		right1 = setup("/npc/oldman_right_1", gp.tileSize, gp.tileSize);
 		right2 = setup("/npc/oldman_right_2", gp.tileSize, gp.tileSize);
+		
 	}
 
 	public void setDialogue() {
@@ -37,7 +44,6 @@ public class NPC_OldMan extends Entity{
 		dialogues[2] = "Good job, I know you have...\na bad path,\nbut you did a great job";
 		dialogues[3] = "Gogo";
 	}
-	
 	// Oldman's behavior
 	public void setAction() {
 		

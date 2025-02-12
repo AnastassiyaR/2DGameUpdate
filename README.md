@@ -1,5 +1,5 @@
 # 2DGameUpdate👾
-## The update of [First2DGame repository](https://github.com/AnastassiyaR/First2DGame)
+The update of [First2DGame repository](https://github.com/AnastassiyaR/First2DGame)
 
 ## About project
 The game was created using a tutorial by **RyiSnow** who perfectly explained how to build the game. However,it also include my changes such as additional text and small design edition.

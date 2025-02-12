@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.Rectangle;
 import java.util.Random;
 
 import main.GamePanel;
@@ -20,8 +21,17 @@ public class NPC_OldMan extends Entity{
 		direction = "down";
 		speed = 1;
 		
+		solidArea = new Rectangle();
+		solidArea.x = 8;
+		solidArea.y = 16;
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+		solidArea.width = 30;
+		solidArea.height = 30;
+		
 		getImage();
 		setDialogue();
+		setAction();
 	}
 	
 	public void getImage() {
@@ -47,31 +57,44 @@ public class NPC_OldMan extends Entity{
 	// Oldman's behavior
 	public void setAction() {
 		
-		actionLockCounter++;
-		
-		if(actionLockCounter == 60) {
-			Random random = new Random();
-			int i = random.nextInt(100)+1; // from 1 to 100
+		if(onPath == true) {
+			 int goalCol = 10;
+	         int goalRow = 10;
+	         searchPath(goalCol, goalRow);
 			
-			if(i <= 25) {
-				direction = "up";
-			}
-			if(i > 25 && i <= 50) {
-				direction = "down";
-			}
-			if(i > 50 && i <= 75) {
-				direction = "left";
-			}
-			if(i > 75 && i <= 100) {
-				direction = "right";
-			}
 			
-			actionLockCounter = 0;
 			
+		} else {
+			actionLockCounter++;
+			
+			if(actionLockCounter == 60) {
+				Random random = new Random();
+				int i = random.nextInt(100)+1; // from 1 to 100
+				
+				if(i <= 25) {
+					direction = "up";
+				}
+				if(i > 25 && i <= 50) {
+					direction = "down";
+				}
+				if(i > 50 && i <= 75) {
+					direction = "left";
+				}
+				if(i > 75 && i <= 100) {
+					direction = "right";
+				}
+				
+				actionLockCounter = 0;
+			}
 		}
+		
+			
+		
 	}
 	
 	public void speak() {
 		super.speak();
+		
+		onPath = true;
 	}
 }

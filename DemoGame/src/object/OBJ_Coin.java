@@ -16,6 +16,7 @@ public class OBJ_Coin extends Entity{
 		value = 1;
 		down1 = setup("/objects/coin",gp.tileSize,gp.tileSize);
 		description = "moneymoney";
+		amount = 1;
 	}
 	
 	public void use(Entity entity) {

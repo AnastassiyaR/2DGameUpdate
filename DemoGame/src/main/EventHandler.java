@@ -129,6 +129,7 @@ public class EventHandler {
 			gp.player.mana = gp.player.maxMana;
 			canTouchEvent = false;
 			gp.aSetter.setMonster();
+			gp.saveload.save();
 		}
 		
 	}

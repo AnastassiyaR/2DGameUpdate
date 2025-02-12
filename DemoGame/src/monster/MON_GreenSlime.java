@@ -49,7 +49,14 @@ public class MON_GreenSlime extends Entity{
 	}
 	public void setAction() {
 		actionLockCounter++;
-		
+		if(onPath == true) {
+			
+			int goalCol = 13;
+			int goalRow = 9;
+			
+			searchPath(goalCol, goalRow);
+		}
+		else {
 		if(actionLockCounter == 60) {
 			Random random = new Random();
 			int i = random.nextInt(100)+1; // from 1 to 100
@@ -71,19 +78,14 @@ public class MON_GreenSlime extends Entity{
 			
 		}
 		
-		int i = new Random().nextInt(100) + 1;
-		if(i > 99 && projectile.alive == false && shotAvailableCount == 30) {
-			projectile.set(worldX, worldY, direction, true, this);
-			gp.projectileList.add(projectile);
-			shotAvailableCount = 0;
-		}
 	}
-	
+	}	
 	// MOVING AWAY
 	public void damageReaction() {
 		
 		actionLockCounter = 0;
-		direction = gp.player.direction;
+//		direction = gp.player.direction;
+		onPath = true;
 		
 	}
 	public void checkDrop() {

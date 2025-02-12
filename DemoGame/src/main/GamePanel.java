@@ -10,6 +10,8 @@ import java.util.Comparator;
 
 import javax.swing.JPanel;
 
+import ai.PathFinder;
+import data.SaveLoad;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
@@ -29,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 	
 	// WORLD SETTINGS
-	public final int maxWorldCol = 50; //text has 50x50
+	public final int maxWorldCol = 50; // text has 50x50
 	public final int maxWorldRow = 50;
 	public final int maxMap = 10;
 	public int currentMap = 0;
@@ -38,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable{
 	int FPS = 60;
 			
 	// SYSTEM
-	TileManager tileM = new TileManager(this);
+	public TileManager tileM = new TileManager(this);
 	public KeyHandler keyH = new KeyHandler(this);
 	Sound music = new Sound();
 	Sound se = new Sound();
@@ -47,6 +49,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public UI ui = new UI(this);
 	public EventHandler eHandler = new EventHandler(this);
 	Thread gameThread; // keep the game working until the stop
+	public PathFinder pFinder = new PathFinder(this);
+	SaveLoad saveload = new SaveLoad(this);
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
@@ -89,24 +93,21 @@ public class GamePanel extends JPanel implements Runnable{
 		gameState = titleState;
 	}
 	
-	public void retry() {
+	public void resetGame(boolean restart) {
 		
 		player.setDefaultPosition();
-		player.restoreLife();
+		player.restoreStatus();
 		aSetter.setNPC();
 		aSetter.setMonster();
 		
-	}
-	public void restart() {
+		if(restart == true) {
+			
+			player.setDefaultValues();
+			aSetter.setObject();
+			aSetter.setTree();
+		}
+
 		
-		player.setDefaultPosition();
-		player.setDefaultValues();
-		player.restoreLife();
-		player.setItems();
-		aSetter.setObject();
-		aSetter.setNPC();
-		aSetter.setMonster();
-		aSetter.setTree();
 	}
 	
 	// START GAME
@@ -125,6 +126,7 @@ public class GamePanel extends JPanel implements Runnable{
  		long timer = 0;
  		int drawCount = 0;
  		
+ 		
  		while(gameThread != null) {
  			currentTime = System.nanoTime();
  			
@@ -133,6 +135,7 @@ public class GamePanel extends JPanel implements Runnable{
  			lastTime = currentTime;
  			
  			if(delta >= 1) {
+ 				
  				update();
  				repaint();
  				delta--;

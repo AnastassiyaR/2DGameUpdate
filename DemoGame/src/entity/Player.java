@@ -43,13 +43,13 @@ public class Player extends Entity{
 		solidAreaDefaultY = solidArea.y;	
 		
 		setDefaultValues();
-		getPlayerImage();
-		getPlayerAttackImage();
-		setItems();
+
 		
 	}
 	
+	
 	public void setDefaultValues() {
+		
 		
 		worldX = gp.tileSize * 23;  // where is player, the first position
 		worldY = gp.tileSize * 21;
@@ -75,20 +75,26 @@ public class Player extends Entity{
 //		projectile = new OBJ_Rock(gp); // just experience with rock
 		attack = getAttack();
 		defense = getDefense();
+		
+		getPlayerImage();
+		getPlayerAttackImage();
+		setItems();
 	}
 	
 	public void setDefaultPosition() {
 		
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 21;
+		
 
 		direction = "down";
 	}
-	public void restoreLife() {
+	public void restoreStatus() {
 		
 		life = maxLife;
 		mana = maxMana;
 		invincible = false;
+		attacking = false;	
 		
 	}
 	
@@ -108,6 +114,25 @@ public class Player extends Entity{
 	
 	public int getDefense() {
 		return defense = dexterity * currentShield.defenseValue;
+	}
+	public int getCurrentWeaponSlot() {
+		int currentWeaponSlot = 0;
+		for(int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i) == currentWeapon) {
+				currentWeaponSlot = i;
+			}
+		}
+		return currentWeaponSlot;
+	}
+	
+	public int getCurrentShieldSlot() {
+		int currentShieldSlot = 0;
+		for(int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i) == currentShield) {
+				currentShieldSlot = i;
+			}
+		}
+		return currentShieldSlot;
 	}
 	
 	public void getPlayerImage() {
@@ -148,6 +173,8 @@ public class Player extends Entity{
 	
 	// KEY SETTINGS
 	public void update() {
+		
+		System.out.println("WorldX: " + worldX/gp.tileSize + "  WorldY: " + worldY/gp.tileSize);
 		
 		if(attacking == true) {
 			attacking();
